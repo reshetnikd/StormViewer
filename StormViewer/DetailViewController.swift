@@ -13,18 +13,23 @@ class DetailViewController: UIViewController {
     
     var selectedImage: String?
     var selectedPictureNumber = 0
+    var selectedCounter = 0
     var totalPictures = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        let defaults = UserDefaults.standard
+        selectedCounter = defaults.object(forKey: "\(selectedPictureNumber)") as? Int ?? 0
         title = "Picture \(selectedPictureNumber) of \(totalPictures)"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareTapped))
         navigationItem.largeTitleDisplayMode = .never
         if let imageToLoad = selectedImage {
             imageView.image = UIImage(named: imageToLoad)
         }
+        selectedCounter += 1
+        defaults.set(selectedCounter, forKey: "\(selectedPictureNumber)")
     }
     
     override func viewWillAppear(_ animated: Bool) {
