@@ -30,6 +30,8 @@ class DetailViewController: UIViewController {
         }
         selectedCounter += 1
         defaults.set(selectedCounter, forKey: "\(selectedPictureNumber)")
+        
+        assert(selectedImage != nil, "Image is always must be selected.")
     }
     
     override func viewWillAppear(_ animated: Bool) {
