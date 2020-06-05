@@ -15,6 +15,7 @@ class DetailViewController: UIViewController {
     var selectedPictureNumber = 0
     var selectedCounter = 0
     var totalPictures = 0
+    var imageSize: CGSize = .zero
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +28,7 @@ class DetailViewController: UIViewController {
         navigationItem.largeTitleDisplayMode = .never
         if let imageToLoad = selectedImage {
             imageView.image = UIImage(named: imageToLoad)
+            imageSize = imageView.image!.size
         }
         selectedCounter += 1
         defaults.set(selectedCounter, forKey: "\(selectedPictureNumber)")
@@ -45,12 +47,28 @@ class DetailViewController: UIViewController {
     }
     
     @objc func shareTapped() {
-        guard let image = imageView.image?.jpegData(compressionQuality: 0.8) else {
+        guard let _ = imageView.image?.jpegData(compressionQuality: 0.8) else {
             print("No image found")
             return
         }
         
-        let vc = UIActivityViewController(activityItems: [image, selectedImage!], applicationActivities: [])
+        let renderer = UIGraphicsImageRenderer(size: CGSize(width: imageSize.width + 20, height: imageSize.height + 40))
+        
+        let shareImage = renderer.image { (ctx) in
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.alignment = .center
+            
+            let attributes: [NSAttributedString.Key: Any] = [
+                .font: UIFont.systemFont(ofSize: 17, weight: .heavy),
+                .paragraphStyle: paragraphStyle
+            ]
+            
+            let attributedString = NSAttributedString(string: selectedImage!, attributes: attributes)
+            imageView.image?.draw(at: CGPoint(x: 10, y: 30))
+            attributedString.draw(with: CGRect(x: 10, y: 10, width: imageSize.width, height: 25), options: .usesLineFragmentOrigin, context: nil)
+        }
+        
+        let vc = UIActivityViewController(activityItems: [shareImage.jpegData(compressionQuality: 0.8)!, selectedImage!], applicationActivities: [])
         vc.popoverPresentationController?.barButtonItem = navigationItem.rightBarButtonItem
         present(vc, animated: true)
     }

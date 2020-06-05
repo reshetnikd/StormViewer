@@ -73,7 +73,7 @@ class ViewController: UICollectionViewController {
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         // 1: try loading the "Detail" view controller and typecasting it to be DetailViewController
-        if let vc = storyboard?.instantiateViewController(withIdentifier: "Bad") as? DetailViewController {
+        if let vc = storyboard?.instantiateViewController(withIdentifier: "Detail") as? DetailViewController {
             // 2: success! Set its selectedImage property
             vc.selectedImage = pictures[indexPath.row]
             vc.selectedPictureNumber = indexPath.row + 1
